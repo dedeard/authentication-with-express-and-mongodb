@@ -65,7 +65,7 @@ const revokeRefreshToken = ca(async (req, res, next) => {
  *
  */
 const refreshAccessToken = ca(async (req, res, next) => {
-  const { token } = req.body
+  const token = String(req.body.token)
   let payload
   try {
     payload = await TokenService.verifyRefreshToken(token)
@@ -78,7 +78,7 @@ const refreshAccessToken = ca(async (req, res, next) => {
       accessToken: TokenService.generateAccessToken(user),
     })
   }
-  next(new ApiError(httpStatus.UNAUTHORIZED, 'The user has been deleted.'))
+  next(new ApiError(httpStatus.UNAUTHORIZED, 'Your account has been deleted.'))
 })
 
 /**
@@ -130,7 +130,7 @@ const resetPassword = ca(async (req, res, next) => {
     await tokenInstance.delete()
   } else {
     return next(
-      new ApiError(httpStatus.UNAUTHORIZED, 'The user has been deleted.'),
+      new ApiError(httpStatus.UNAUTHORIZED, 'Your account has been deleted.'),
     )
   }
   res.end()

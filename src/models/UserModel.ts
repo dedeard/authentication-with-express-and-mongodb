@@ -9,7 +9,10 @@ import {
 } from '@typegoose/typegoose'
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses'
 import bcrypt from 'bcrypt'
+import sharp from 'sharp'
+import moment from 'moment'
 import toJSON from '@meanie/mongoose-to-json'
+import StorageService from '../services/StorageService'
 
 @pre<User>('save', function (next) {
   const password = this.password
@@ -64,6 +67,35 @@ export class User extends TimeStamps {
     password: string,
   ): Promise<boolean> {
     return bcrypt.compare(password, this.password)
+  }
+
+  /**
+   * Generate user avatar.
+   *
+   * @param this
+   * @param imageBuff
+   * @returns
+   */
+  public async generateAvatar(
+    this: DocumentType<User>,
+    imageBuff: Buffer,
+  ): Promise<string> {
+    const name = 'avatar/' + this._id + '-' + moment().unix() + '.jpg'
+    await sharp(imageBuff)
+      .resize({ width: 180, height: 180 })
+      .toFormat('jpeg')
+      .toBuffer()
+      .then((buffer) => {
+        return StorageService.save(name, buffer, true)
+      })
+
+    const oldAvatar = this.avatar
+    this.avatar = StorageService.createUrl(name)
+    await this.save()
+    if (oldAvatar) {
+      await StorageService.delete(StorageService.normalizeUrl(oldAvatar))
+    }
+    return this.avatar
   }
 
   /**
