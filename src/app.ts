@@ -7,6 +7,7 @@ import config from './config/config'
 import logger from './config/logger'
 import ErrorMiddleware from './middlewares/ErrorMiddleware'
 import CorsMiddleware from './middlewares/CorsMiddleware'
+import { setupAuthRoute } from './routes/AuthRoute'
 
 class Application {
   app: express.Application
@@ -41,9 +42,7 @@ class Application {
   }
 
   router() {
-    this.app.get('/', (req, res) => {
-      res.send('hallo world!')
-    })
+    setupAuthRoute(this.app)
   }
 
   /**

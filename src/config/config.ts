@@ -16,13 +16,18 @@ const config = {
   },
   jwt: {
     access: {
-      secret: process.env.JWT_ACCESS_SECRET,
+      secret: String(process.env.JWT_ACCESS_SECRET),
       expMinutes: Number(process.env.JWT_ACCESS_EXP_MINUTES),
     },
     refresh: {
-      secret: process.env.JWT_REFRESH_SECRET,
+      secret: String(process.env.JWT_REFRESH_SECRET),
       expDays: Number(process.env.JWT_REFRESH_EXP_DAYS),
     },
+  },
+  resetPasswordExpMinutes: Number(process.env.RESET_PASSWORD_EXP_MINUTES),
+  amqp: {
+    url: process.env.AMQP_URL,
+    resetPasswordQueue: process.env.AMQP_RESET_PASSWORD_QUEUE,
   },
 }
 
