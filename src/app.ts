@@ -9,6 +9,7 @@ import ErrorMiddleware from './middlewares/ErrorMiddleware'
 import CorsMiddleware from './middlewares/CorsMiddleware'
 import { setupAuthRoute } from './routes/AuthRoute'
 import { setupAccountRoute } from './routes/AccountRoute'
+import { setupUserRoute } from './routes/UserRoute'
 
 class Application {
   app: express.Application
@@ -45,6 +46,7 @@ class Application {
   router() {
     setupAuthRoute(this.app)
     setupAccountRoute(this.app)
+    setupUserRoute(this.app)
   }
 
   /**

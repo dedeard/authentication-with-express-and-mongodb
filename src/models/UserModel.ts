@@ -99,6 +99,20 @@ export class User extends TimeStamps {
   }
 
   /**
+   * Delete user avatar.
+   *
+   * @param this
+   * @returns
+   */
+  public async deleteAvatar(this: DocumentType<User>): Promise<void> {
+    if (this.avatar) {
+      await StorageService.delete(StorageService.normalizeUrl(this.avatar))
+      this.avatar = undefined
+      await this.save()
+    }
+  }
+
+  /**
    * Check username exists.
    *
    * @param this
