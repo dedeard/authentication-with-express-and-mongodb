@@ -5,6 +5,7 @@ import morgan from 'morgan'
 import fileUpload from 'express-fileupload'
 import config from './config/config'
 import logger from './config/logger'
+import i18n from './shared/i18n'
 import ErrorMiddleware from './middlewares/ErrorMiddleware'
 import CorsMiddleware from './middlewares/CorsMiddleware'
 import { setupAuthRoute } from './routes/AuthRoute'
@@ -41,6 +42,7 @@ class Application {
     this.app.use(express.urlencoded({ extended: true }))
     this.app.use(fileUpload())
     this.app.use(helmet())
+    this.app.use(i18n.init)
   }
 
   router() {
