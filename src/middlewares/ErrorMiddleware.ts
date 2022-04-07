@@ -64,7 +64,7 @@ class ErrorMiddleware {
     res.status(statusCode).json({
       statusCode,
       message,
-      ...(config.isDev ? err : {}),
+      ...(config.isDev && err.stack ? err : {}),
     })
   }
 }
