@@ -1,5 +1,4 @@
 import { checkSchema, validationResult } from 'express-validator'
-import httpStatus from 'http-status'
 import UserModel from '../models/UserModel'
 import ApiError from '../shared/ApiError'
 import ca from '../shared/catchAsync'
@@ -42,15 +41,13 @@ const register = [
   ca(async (req, res, next) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-      return next(new ApiError(httpStatus.BAD_REQUEST, errors.array()[0].msg))
+      return next(new ApiError(400, errors.array()[0].msg))
     }
     if (await UserModel.isUsernameTaken(req.body.username)) {
-      return next(
-        new ApiError(httpStatus.BAD_REQUEST, 'Username already exists.'),
-      )
+      return next(new ApiError(400, 'Username already exists.'))
     }
     if (await UserModel.isEmailTaken(req.body.email)) {
-      return next(new ApiError(httpStatus.BAD_REQUEST, 'Email already exists.'))
+      return next(new ApiError(400, 'Email already exists.'))
     }
     next()
   }),
@@ -76,7 +73,7 @@ const login = [
   ca((req, res, next) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-      return next(new ApiError(httpStatus.BAD_REQUEST, errors.array()[0].msg))
+      return next(new ApiError(400, errors.array()[0].msg))
     }
     next()
   }),
@@ -95,12 +92,10 @@ const forgotPassword = [
   ca(async (req, res, next) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-      return next(new ApiError(httpStatus.BAD_REQUEST, errors.array()[0].msg))
+      return next(new ApiError(400, errors.array()[0].msg))
     }
     if (!(await UserModel.isEmailTaken(req.body.email))) {
-      return next(
-        new ApiError(httpStatus.BAD_REQUEST, 'Email is not registered.'),
-      )
+      return next(new ApiError(400, 'Email is not registered.'))
     }
     next()
   }),
@@ -119,7 +114,7 @@ const checkResetPasswordToken = [
   ca((req, res, next) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-      return next(new ApiError(httpStatus.BAD_REQUEST, errors.array()[0].msg))
+      return next(new ApiError(400, errors.array()[0].msg))
     }
     next()
   }),
@@ -144,7 +139,7 @@ const resetPassword = [
   ca((req, res, next) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-      return next(new ApiError(httpStatus.BAD_REQUEST, errors.array()[0].msg))
+      return next(new ApiError(400, errors.array()[0].msg))
     }
     next()
   }),

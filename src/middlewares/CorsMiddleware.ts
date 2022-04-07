@@ -1,5 +1,4 @@
 import { Application } from 'express'
-import httpStatus from 'http-status'
 import config from '../config/config'
 import cors from 'cors'
 import ApiError from '../shared/ApiError'
@@ -32,7 +31,7 @@ class CorsMiddleware {
           if (this.whitelists.indexOf(String(origin)) !== -1) {
             callback(null, true)
           } else {
-            callback(new ApiError(httpStatus.FORBIDDEN, 'Not allowed by CORS'))
+            callback(new ApiError(403, 'Not allowed by CORS'))
           }
         },
       }),

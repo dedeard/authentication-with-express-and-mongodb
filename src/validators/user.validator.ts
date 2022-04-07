@@ -1,5 +1,4 @@
 import { checkSchema, validationResult } from 'express-validator'
-import httpStatus from 'http-status'
 import FileType from 'file-type'
 import { UploadedFile } from 'express-fileupload'
 import UserModel from '../models/UserModel'
@@ -44,15 +43,13 @@ const createUser = [
   ca(async (req, res, next) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-      return next(new ApiError(httpStatus.BAD_REQUEST, errors.array()[0].msg))
+      return next(new ApiError(400, errors.array()[0].msg))
     }
     if (await UserModel.isUsernameTaken(req.body.username)) {
-      return next(
-        new ApiError(httpStatus.BAD_REQUEST, 'Username already exists.'),
-      )
+      return next(new ApiError(400, 'Username already exists.'))
     }
     if (await UserModel.isEmailTaken(req.body.email)) {
-      return next(new ApiError(httpStatus.BAD_REQUEST, 'Email already exists.'))
+      return next(new ApiError(400, 'Email already exists.'))
     }
     next()
   }),
@@ -66,7 +63,7 @@ const updateUser = [
         return next()
       }
     } catch (e: any) {}
-    next(new ApiError(httpStatus.NOT_FOUND, 'User not found.'))
+    next(new ApiError(404, 'User not found.'))
   }),
   checkSchema({
     name: {
@@ -128,12 +125,7 @@ const updateUser = [
     }
     const mime = await FileType.fromBuffer(data.data)
     if (!['jpg', 'png', 'gif'].includes(mime?.ext || '')) {
-      return next(
-        new ApiError(
-          httpStatus.BAD_REQUEST,
-          'Image format must be [jpg, png, gif]',
-        ),
-      )
+      return next(new ApiError(400, 'Image format must be [jpg, png, gif]'))
     }
     req.files = { image: data }
     next()
@@ -141,15 +133,13 @@ const updateUser = [
   ca(async (req, res, next) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-      return next(new ApiError(httpStatus.BAD_REQUEST, errors.array()[0].msg))
+      return next(new ApiError(400, errors.array()[0].msg))
     }
     if (await UserModel.isUsernameTaken(req.body.username, req.params.id)) {
-      return next(
-        new ApiError(httpStatus.BAD_REQUEST, 'Username already exists.'),
-      )
+      return next(new ApiError(400, 'Username already exists.'))
     }
     if (await UserModel.isEmailTaken(req.body.email, req.params.id)) {
-      return next(new ApiError(httpStatus.BAD_REQUEST, 'Email already exists.'))
+      return next(new ApiError(400, 'Email already exists.'))
     }
     next()
   }),
@@ -159,7 +149,7 @@ const deleteUser = [
   ca(async (req, res, next) => {
     const count = await UserModel.countDocuments({ _id: req.params.id })
     if (count === 0) {
-      return next(new ApiError(httpStatus.NOT_FOUND, 'User not found.'))
+      return next(new ApiError(404, 'User not found.'))
     }
     next()
   }),

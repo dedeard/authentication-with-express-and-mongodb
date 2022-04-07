@@ -1,5 +1,4 @@
 import { Application, Request, Response, NextFunction } from 'express'
-import httpStatus from 'http-status'
 import config from '../config/config'
 import logger from '../config/logger'
 import ApiError from '../shared/ApiError'
@@ -22,7 +21,7 @@ class ErrorMiddleware {
    * @param next
    */
   catch404(req: Request, res: Response, next: NextFunction): void {
-    next(new ApiError(httpStatus.NOT_FOUND, httpStatus['404_MESSAGE']))
+    next(new ApiError(404, 'Not found'))
   }
 
   /**
@@ -40,10 +39,8 @@ class ErrorMiddleware {
   ): void {
     let error = err
     if (err.name !== 'ApiError') {
-      const statusCode = 500
-      const defaultMessage = err.message || httpStatus['500_MESSAGE']
-      const message = config.isDev ? defaultMessage : httpStatus['500_MESSAGE']
-      error = new ApiError(statusCode, message, err.stack)
+      const msg = err.message || 'Internal server error'
+      error = new ApiError(500, msg, err.stack)
       logger.error(err)
     }
     next(error)

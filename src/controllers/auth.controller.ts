@@ -1,5 +1,4 @@
 import { DocumentType } from '@typegoose/typegoose'
-import httpStatus from 'http-status'
 import { ForgotToken } from '../models/ForgotTokenModel'
 import UserModel from '../models/UserModel'
 import NotificationService from '../services/NotificationService'
@@ -35,12 +34,7 @@ const login = ca(async (req, res, next) => {
       },
     })
   }
-  next(
-    new ApiError(
-      httpStatus.BAD_REQUEST,
-      'Password and Username combination is invalid.',
-    ),
-  )
+  next(new ApiError(400, 'Password and Username combination is invalid.'))
 })
 
 /**
@@ -54,7 +48,7 @@ const revokeRefreshToken = ca(async (req, res, next) => {
     await TokenService.verifyRefreshToken(token, false)
     await TokenService.blacklistRefreshToken(token)
   } catch (e: any) {
-    return next(new ApiError(httpStatus.BAD_REQUEST, e.message))
+    return next(new ApiError(400, e.message))
   }
   res.end()
 })
@@ -70,7 +64,7 @@ const refreshAccessToken = ca(async (req, res, next) => {
   try {
     payload = await TokenService.verifyRefreshToken(token)
   } catch (e: any) {
-    return next(new ApiError(httpStatus.BAD_REQUEST, e.message))
+    return next(new ApiError(400, e.message))
   }
   const user = await UserModel.findById(payload.uid)
   if (user) {
@@ -78,7 +72,7 @@ const refreshAccessToken = ca(async (req, res, next) => {
       accessToken: TokenService.generateAccessToken(user),
     })
   }
-  next(new ApiError(httpStatus.UNAUTHORIZED, 'Your account has been deleted.'))
+  next(new ApiError(401, 'Your account has been deleted.'))
 })
 
 /**
@@ -105,7 +99,7 @@ const checkResetPasswordToken = ca(async (req, res, next) => {
     await TokenService.verifyForgotPasswordToken(token)
     res.end()
   } catch (e: any) {
-    next(new ApiError(httpStatus.BAD_REQUEST, e.message))
+    next(new ApiError(400, e.message))
   }
 })
 
@@ -121,7 +115,7 @@ const resetPassword = ca(async (req, res, next) => {
   try {
     tokenInstance = await TokenService.verifyForgotPasswordToken(token)
   } catch (e: any) {
-    return next(new ApiError(httpStatus.BAD_REQUEST, e.message))
+    return next(new ApiError(400, e.message))
   }
   const user = await UserModel.findOne({ email: tokenInstance.email })
   if (user) {
@@ -129,9 +123,7 @@ const resetPassword = ca(async (req, res, next) => {
     await user.save()
     await tokenInstance.delete()
   } else {
-    return next(
-      new ApiError(httpStatus.UNAUTHORIZED, 'Your account has been deleted.'),
-    )
+    return next(new ApiError(401, 'Your account has been deleted.'))
   }
   res.end()
 })

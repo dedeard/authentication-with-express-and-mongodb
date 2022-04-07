@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express'
-import httpStatus from 'http-status'
 import UserModel from '../models/UserModel'
 import ca from '../shared/catchAsync'
 import ApiError from '../shared/ApiError'
@@ -22,35 +21,24 @@ class AuthMiddleware {
    */
   async checkAuth(isAdminCheck: boolean): Promise<void> {
     const bearer = parseBearerToken(this.req)
-    if (!bearer)
-      return this.next(
-        new ApiError(httpStatus.UNAUTHORIZED, 'Access token required.'),
-      )
+    if (!bearer) return this.next(new ApiError(401, 'Access token required.'))
 
     let payload: IAccessToken
     try {
       payload = TokenService.verifyAccessToken(bearer)
     } catch (e: any) {
       if (e.name === 'TokenExpiredError') {
-        return this.next(
-          new ApiError(httpStatus.BAD_REQUEST, 'Access token has expired.'),
-        )
+        return this.next(new ApiError(401, 'Access token has expired.'))
       }
-      return this.next(
-        new ApiError(httpStatus.BAD_REQUEST, 'Invalid access token'),
-      )
+      return this.next(new ApiError(401, 'Invalid access token'))
     }
 
     const user = await UserModel.findById(payload.uid)
     if (!user)
-      return this.next(
-        new ApiError(httpStatus.UNAUTHORIZED, 'Your account has been deleted.'),
-      )
+      return this.next(new ApiError(401, 'Your account has been deleted.'))
 
     if (isAdminCheck && !user.admin)
-      return this.next(
-        new ApiError(httpStatus.UNAUTHORIZED, 'You do not have access!'),
-      )
+      return this.next(new ApiError(401, 'You do not have access!'))
 
     this.req.user = user
 

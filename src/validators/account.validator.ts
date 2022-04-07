@@ -1,5 +1,4 @@
 import { checkSchema, validationResult } from 'express-validator'
-import httpStatus from 'http-status'
 import FileType from 'file-type'
 import { UploadedFile } from 'express-fileupload'
 import UserModel from '../models/UserModel'
@@ -59,18 +58,16 @@ const updateProfile = [
   ca(async (req, res, next) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-      return next(new ApiError(httpStatus.BAD_REQUEST, errors.array()[0].msg))
+      return next(new ApiError(400, errors.array()[0].msg))
     }
     if (await UserModel.isUsernameTaken(req.body.username, req.user.id)) {
-      return next(
-        new ApiError(httpStatus.BAD_REQUEST, 'Username already exists.'),
-      )
+      return next(new ApiError(400, 'Username already exists.'))
     }
     if (
       req.body.newPassword &&
       !(await req.user.comparePassword(req.body.password))
     ) {
-      return next(new ApiError(httpStatus.BAD_REQUEST, 'Password is invalid.'))
+      return next(new ApiError(400, 'Password is invalid.'))
     }
     next()
   }),
@@ -80,16 +77,11 @@ const updateAvatar = ca(async (req, res, next) => {
   let image = req.files?.image
   const data: UploadedFile | undefined = Array.isArray(image) ? image[0] : image
   if (!data) {
-    return next(new ApiError(httpStatus.BAD_REQUEST, 'Image is required'))
+    return next(new ApiError(400, 'Image is required'))
   }
   const mime = await FileType.fromBuffer(data.data)
   if (!['jpg', 'png', 'gif'].includes(mime?.ext || '')) {
-    return next(
-      new ApiError(
-        httpStatus.BAD_REQUEST,
-        'Image format must be [jpg, png, gif]',
-      ),
-    )
+    return next(new ApiError(400, 'Image format must be [jpg, png, gif]'))
   }
   req.files = { image: data }
   next()

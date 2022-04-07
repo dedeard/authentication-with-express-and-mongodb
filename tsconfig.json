@@ -5,7 +5,6 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "typeRoots": ["./types"]
+    "emitDecoratorMetadata": true
   }
 }
