@@ -1,5 +1,6 @@
 import { Connection, Channel } from 'amqplib-as-promised'
 import config from '../config/config'
+import logger from '../config/logger'
 
 class NotificationService {
   private conn?: Connection
@@ -30,9 +31,10 @@ class NotificationService {
    * @param url
    * @param email
    */
-  async sendResetPasswordUrl(url: string, email: string): Promise<void> {
+  async sendResetPasswordUrl(token: string, email: string): Promise<void> {
     await this.open()
-    const msg = Buffer.from(JSON.stringify({ url, email }))
+    if (config.isDev) logger.info('Reset password token: ' + token)
+    const msg = Buffer.from(JSON.stringify({ token, email }))
     await this.ch?.assertQueue(String(config.amqp.resetPasswordQueue), {
       durable: true,
     })

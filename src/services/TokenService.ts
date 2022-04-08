@@ -17,9 +17,7 @@ export interface IAccessToken extends IRefreshToken {
     id: string
     name: string
     email: string
-    username: string
     admin: boolean
-    avatar?: string
   }
 }
 
@@ -37,10 +35,8 @@ class TokenService {
       user: {
         id: user.id,
         name: user.name,
-        username: user.username,
         email: user.email,
         admin: user.admin,
-        avatar: user.avatar,
       },
     }
     return jwt.sign(payload, config.jwt.access.secret)
@@ -91,10 +87,7 @@ class TokenService {
    * @param blacklistCheck
    * @returns
    */
-  static async verifyRefreshToken(
-    token: string,
-    blacklistCheck: boolean | undefined = true,
-  ): Promise<IRefreshToken> {
+  static async verifyRefreshToken(token: string, blacklistCheck: boolean | undefined = true): Promise<IRefreshToken> {
     if (blacklistCheck) {
       const count = await BlacklistTokenModel.countDocuments({ token })
       if (count > 0) {
@@ -127,9 +120,7 @@ class TokenService {
    * @param token
    * @returns
    */
-  static async verifyForgotPasswordToken(
-    token: string,
-  ): Promise<DocumentType<ForgotToken>> {
+  static async verifyForgotPasswordToken(token: string): Promise<DocumentType<ForgotToken>> {
     const forgotToken = await ForgotTokenModel.findOne({ token })
     if (!forgotToken) {
       throw new Error('The token is invalid.')

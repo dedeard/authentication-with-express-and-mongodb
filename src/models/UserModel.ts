@@ -1,12 +1,4 @@
-import {
-  prop,
-  getModelForClass,
-  DocumentType,
-  pre,
-  plugin,
-  index,
-  ReturnModelType,
-} from '@typegoose/typegoose'
+import { prop, getModelForClass, DocumentType, pre, plugin, index, ReturnModelType } from '@typegoose/typegoose'
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses'
 import bcrypt from 'bcrypt'
 import sharp from 'sharp'
@@ -32,19 +24,10 @@ export class User extends TimeStamps {
   public name!: string
 
   @prop({ required: true, unique: true })
-  public username!: string
-
-  @prop({ required: true, unique: true })
   public email!: string
 
   @prop({ required: true, private: true })
   public password!: string
-
-  @prop()
-  public bio?: string
-
-  @prop()
-  public website?: string
 
   @prop()
   public avatar?: string
@@ -62,11 +45,8 @@ export class User extends TimeStamps {
    * @param password
    * @returns
    */
-  comparePassword(
-    this: DocumentType<User>,
-    password: string,
-  ): Promise<boolean> {
-    return bcrypt.compare(password, this.password)
+  comparePassword(this: DocumentType<User>, password: string): boolean {
+    return bcrypt.compareSync(password, this.password)
   }
 
   /**
@@ -76,10 +56,7 @@ export class User extends TimeStamps {
    * @param imageBuff
    * @returns
    */
-  public async generateAvatar(
-    this: DocumentType<User>,
-    imageBuff: Buffer,
-  ): Promise<string> {
+  public async generateAvatar(this: DocumentType<User>, imageBuff: Buffer): Promise<string> {
     const name = 'avatar/' + this._id + '-' + moment().unix() + '.jpg'
     await sharp(imageBuff)
       .resize({ width: 180, height: 180 })
@@ -120,11 +97,7 @@ export class User extends TimeStamps {
    * @param excludeUserId
    * @returns
    */
-  static async isUsernameTaken(
-    this: ReturnModelType<typeof User>,
-    username: string,
-    excludeUserId?: string,
-  ): Promise<Boolean> {
+  static async isUsernameTaken(this: ReturnModelType<typeof User>, username: string, excludeUserId?: string): Promise<Boolean> {
     const count = await this.countDocuments({
       username,
       _id: { $ne: excludeUserId },
@@ -143,11 +116,7 @@ export class User extends TimeStamps {
    * @param excludeUserId
    * @returns
    */
-  static async isEmailTaken(
-    this: ReturnModelType<typeof User>,
-    email: string,
-    excludeUserId?: string,
-  ): Promise<Boolean> {
+  static async isEmailTaken(this: ReturnModelType<typeof User>, email: string, excludeUserId?: string): Promise<Boolean> {
     const count = await this.countDocuments({
       email,
       _id: { $ne: excludeUserId },

@@ -4,9 +4,7 @@ import config from './config'
 
 const logger = createLogger({
   level: config.isDev ? 'debug' : 'info',
-  format: config.isDev
-    ? format.combine(format.colorize(), format.simple())
-    : format.combine(format.timestamp(), format.json()),
+  format: config.isDev ? format.combine(format.colorize(), format.simple()) : format.combine(format.timestamp(), format.json()),
 })
 
 if (config.isDev) {

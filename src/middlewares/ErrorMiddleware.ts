@@ -31,16 +31,11 @@ class ErrorMiddleware {
    * @param res
    * @param next
    */
-  errorConverter(
-    err: ApiError | Error,
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): void {
+  errorConverter(err: ApiError | Error, req: Request, res: Response, next: NextFunction): void {
     let error = err
     if (err.name !== 'ApiError') {
       const msg = err.message || 'Internal server error'
-      error = new ApiError(500, msg, err.stack)
+      error = new ApiError(500, msg, undefined, err.stack)
       logger.error(err)
     }
     next(error)
@@ -54,16 +49,12 @@ class ErrorMiddleware {
    * @param res
    * @param next
    */
-  makeErrorResponse(
-    err: ApiError,
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): void {
-    const { statusCode, message } = err
+  makeErrorResponse(err: ApiError, req: Request, res: Response, next: NextFunction): void {
+    const { statusCode, message, errors } = err
     res.status(statusCode).json({
       statusCode,
       message,
+      errors,
       ...(config.isDev && err.stack ? err : {}),
     })
   }

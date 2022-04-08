@@ -8,12 +8,7 @@ const storage = new Storage({
 const bucket = storage.bucket(String(config.bucketName))
 
 class StorageService {
-  static async save(
-    name: string,
-    data: string | Buffer,
-    makePublic?: true,
-    option?: SaveOptions,
-  ): Promise<void> {
+  static async save(name: string, data: string | Buffer, makePublic?: true, option?: SaveOptions): Promise<void> {
     await bucket.file(name).save(data, option || { contentType: 'image/jpeg' })
     if (makePublic) {
       await bucket.file(name).makePublic()

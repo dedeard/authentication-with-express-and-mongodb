@@ -1,6 +1,5 @@
 import express, { Application } from 'express'
 import C from '../controllers/auth.controller'
-import V from '../validators/auth.validator'
 
 export class AuthRoute {
   router: express.Router
@@ -11,17 +10,13 @@ export class AuthRoute {
   }
 
   setup(): void {
-    this.router.post('/register', ...V.register, C.register)
-    this.router.post('/login', ...V.login, C.login)
-    this.router.post('/refresh-access-token', C.refreshAccessToken)
-    this.router.delete('/revoke-refresh-token', C.revokeRefreshToken)
-    this.router.post('/password', ...V.forgotPassword, C.forgotPassword)
-    this.router.get(
-      '/password',
-      ...V.checkResetPasswordToken,
-      C.checkResetPasswordToken,
-    )
-    this.router.put('/password', ...V.resetPassword, C.resetPassword)
+    this.router.post('/register', ...C.register)
+    this.router.post('/login', ...C.login)
+    this.router.post('/refresh-access-token', ...C.refreshAccessToken)
+    this.router.delete('/revoke-refresh-token', ...C.revokeRefreshToken)
+    this.router.post('/password', ...C.forgotPassword)
+    this.router.get('/password', ...C.checkResetPasswordToken)
+    this.router.put('/password', ...C.resetPassword)
   }
 }
 

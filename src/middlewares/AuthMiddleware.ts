@@ -34,11 +34,9 @@ class AuthMiddleware {
     }
 
     const user = await UserModel.findById(payload.uid)
-    if (!user)
-      return this.next(new ApiError(401, 'Your account has been deleted.'))
+    if (!user) return this.next(new ApiError(401, 'Your account has been deleted.'))
 
-    if (isAdminCheck && !user.admin)
-      return this.next(new ApiError(401, 'You do not have access!'))
+    if (isAdminCheck && !user.admin) return this.next(new ApiError(401, 'You do not have access!'))
 
     this.req.user = user
 
@@ -46,9 +44,7 @@ class AuthMiddleware {
   }
 }
 
-export function auth(
-  isAdminCheck?: boolean,
-): (req: Request, res: Response, next: NextFunction) => void {
+export function auth(isAdminCheck?: boolean): (req: Request, res: Response, next: NextFunction) => void {
   return ca(async (req, res, next) => {
     const authentication = new AuthMiddleware(req, next)
     await authentication.checkAuth(Boolean(isAdminCheck))
