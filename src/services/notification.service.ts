@@ -26,7 +26,7 @@ class NotificationService {
   }
 
   /**
-   * Send reset password email.
+   * Send reset password email to message broker.
    *
    */
   async sendResetPasswordUrl(token: string, email: string): Promise<void> {
