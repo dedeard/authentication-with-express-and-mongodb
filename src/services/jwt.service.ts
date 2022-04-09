@@ -16,7 +16,6 @@ export interface IAccessToken extends IRefreshToken {
     id: string
     name: string
     email: string
-    admin: boolean
   }
 }
 
@@ -32,7 +31,6 @@ export const generateAccessToken = (user: IUserDocument): { bearer: string; expi
       id: user.id,
       name: user.name,
       email: user.email,
-      admin: !!user.admin,
     },
   }
   return {

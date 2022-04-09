@@ -8,7 +8,6 @@ export interface IUser {
   name: string
   email: string
   password: string
-  admin?: boolean
   avatar?: string
 }
 
@@ -27,7 +26,6 @@ export const UserSchema: Schema<IUserDocument> = new Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    admin: { type: Boolean, default: false },
     avatar: { type: String },
   },
   {

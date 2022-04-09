@@ -6,7 +6,6 @@ const data = require('../../package.json')
  * @property {string} id
  * @property {string} name.required
  * @property {string} email.required
- * @property {boolean} admin
  * @property {string} avatar
  * @property {string} lastLogin
  * @property {string} createdAt
