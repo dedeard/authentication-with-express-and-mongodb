@@ -1,5 +1,5 @@
 {
-  "name": "typescript-express-auth",
+  "name": "cirsqu-auth",
   "version": "0.0.1",
   "description": "This api is for user authentication.",
   "main": "dist/index.js",
