@@ -1,7 +1,7 @@
-import connectDB from './config/connectDB'
+import { connect } from './config/connect'
 import Application from './app'
 
 const application = new Application()
 
 // connect to db and run application
-connectDB().then(() => application.listen())
+connect().then(() => application.listen())

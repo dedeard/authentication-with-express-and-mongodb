@@ -1,9 +1,5 @@
 import Joi from 'joi'
 
-/**
- * For error response
- *
- */
 class ApiError extends Error {
   statusCode: number
   errors?: { [key: string]: string }

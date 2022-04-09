@@ -3,8 +3,8 @@ import config from '../config/config'
 import logger from '../config/logger'
 
 class NotificationService {
-  private conn?: Connection
-  private ch?: Channel
+  conn?: Connection
+  ch?: Channel
 
   /**
    * Open rabbitmq connection.
@@ -28,8 +28,6 @@ class NotificationService {
   /**
    * Send reset password email.
    *
-   * @param url
-   * @param email
    */
   async sendResetPasswordUrl(token: string, email: string): Promise<void> {
     await this.open()

@@ -3,7 +3,7 @@ import { createLogger, format, transports } from 'winston'
 import config from './config'
 
 const logger = createLogger({
-  level: config.isDev ? 'debug' : 'info',
+  level: config.isDev || config.isTest ? 'debug' : 'info',
   format: config.isDev ? format.combine(format.colorize(), format.simple()) : format.combine(format.timestamp(), format.json()),
 })
 
@@ -12,13 +12,13 @@ if (config.isDev) {
 } else {
   logger.add(
     new transports.File({
-      filename: path.join(__dirname, '../logs/error.log'),
+      filename: path.join(__dirname, '../../logs/error' + (config.isTest ? '.test' : '') + '.log'),
       level: 'error',
     }),
   )
   logger.add(
     new transports.File({
-      filename: path.join(__dirname, '../logs/combined.log'),
+      filename: path.join(__dirname, '../../logs/combined' + (config.isTest ? '.test' : '') + '.log'),
     }),
   )
 }

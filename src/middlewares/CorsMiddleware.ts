@@ -1,6 +1,6 @@
 import { Application } from 'express'
-import config from '../config/config'
 import cors from 'cors'
+import config from '../config/config'
 import ApiError from '../shared/ApiError'
 
 class CorsMiddleware {
@@ -12,18 +12,13 @@ class CorsMiddleware {
     this.whitelists = String(config.whitelistOrigins)
       .split(',')
       .filter((origin) => origin)
-    if (!config.isDev) {
+    if (config.isProd) {
       this.catchOrigin()
+    } else {
+      this.app.use(cors())
     }
   }
 
-  /**
-   * Catch not found
-   *
-   * @param req
-   * @param res
-   * @param next
-   */
   catchOrigin(): void {
     this.app.use(
       cors({
