@@ -1,6 +1,7 @@
 {
   "version": "0.2.0",
-  "configurations": [{
+  "configurations": [
+    {
       "command": "yarn dev",
       "name": "Run dev",
       "request": "launch",
@@ -9,21 +10,10 @@
     {
       "name": "Test Single file",
       "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
-      "args": [
-        "-r",
-        "ts-node/register",
-        "--watch",
-        "--watch-files",
-        "${relativeFile}",
-        "${relativeFile}",
-        "--colors",
-        "--no-timeout"
-      ],
+      "args": ["-r", "ts-node/register", "--watch", "--watch-files", "${relativeFile}", "${relativeFile}", "--colors", "--no-timeout"],
       "internalConsoleOptions": "openOnSessionStart",
       "request": "launch",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
+      "skipFiles": ["<node_internals>/**"],
       "type": "node",
       "env": {
         "NODE_ENV": "test"
