@@ -1,7 +1,7 @@
 {
-  "name": "cirsqu-auth",
+  "name": "authentication-with-express-and-mongodb",
   "version": "0.0.1",
-  "description": "This api is for user authentication.",
+  "description": "This is a simple authentication developed using node with typescript.",
   "main": "dist/index.js",
   "license": "MIT",
   "scripts": {
