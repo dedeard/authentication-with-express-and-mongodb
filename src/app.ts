@@ -11,6 +11,7 @@ import ErrorMiddleware from './middlewares/ErrorMiddleware'
 import swaggerOptions from './config/swagger'
 import { setupAuthRoute } from './routes/auth.route'
 import { setupAccountRoute } from './routes/account.route'
+import { setupUsersRoute } from './routes/users.route'
 
 class Application {
   app: express.Application
@@ -48,6 +49,7 @@ class Application {
     }
     setupAuthRoute(this.app)
     setupAccountRoute(this.app)
+    setupUsersRoute(this.app)
   }
 
   onError(error: any) {

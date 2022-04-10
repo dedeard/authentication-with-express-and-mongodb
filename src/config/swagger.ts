@@ -46,6 +46,14 @@ const data = require('../../package.json')
  * @property {string} message - error message
  */
 
+/**
+ * Fetch users scheme
+ * @typedef {object} FetchUsers
+ * @property {array<User>} users
+ * @property {number} total
+ * @property {number} offset
+ */
+
 const swaggerOptions = {
   info: {
     version: data.version,
